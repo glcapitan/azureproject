@@ -1,0 +1,15 @@
+{
+	"name": "df-azureprojectglc",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "916a7eb1-c7f4-41f1-bf20-450cfcb5811b",
+		"tenantId": "40e3ab80-2024-45a3-bf76-7a0761a24d29"
+	}
+}
