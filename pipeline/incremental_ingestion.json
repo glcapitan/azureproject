@@ -48,7 +48,10 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"container": "bronze",
-							"folder": "cdc",
+							"folder": {
+								"value": "@{pipeline().parameters.table}_cdc",
+								"type": "Expression"
+							},
 							"file": "cdc.json"
 						}
 					},
@@ -285,7 +288,10 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"container": "bronze",
-										"folder": "cdc",
+										"folder": {
+											"value": "@{pipeline().parameters.table}_cdc",
+											"type": "Expression"
+										},
 										"file": "empty.json"
 									}
 								}
@@ -296,7 +302,10 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"container": "bronze",
-										"folder": "cdc",
+										"folder": {
+											"value": "@{pipeline().parameters.table}_cdc",
+											"type": "Expression"
+										},
 										"file": "cdc.json"
 									}
 								}
@@ -308,13 +317,16 @@
 		],
 		"parameters": {
 			"schema": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "dbo"
 			},
 			"table": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "DimUser"
 			},
 			"cdc_col": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "updated_at"
 			},
 			"from_date": {
 				"type": "string"
