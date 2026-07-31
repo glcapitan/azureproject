@@ -134,7 +134,7 @@
 											"type": "Expression"
 										},
 										"table": {
-											"value": "@{item().table}_cdc",
+											"value": "@{item().table}",
 											"type": "Expression"
 										}
 									}
