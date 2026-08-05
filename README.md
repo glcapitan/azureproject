@@ -26,21 +26,11 @@ iterating over a JSON array, so adding a sixth means editing a parameter, not bu
 
 ## Architecture
 
-```
-Azure SQL Database
-        │
-        │  watermark-based incremental copy (ADF)
-        ▼
-   bronze/         parquet, per-table folders + cdc watermark files
-        │
-        │  Auto Loader streaming (Databricks)
-        ▼
-   silver/         Delta, cleaned and standardised
-        │
-        │  Delta Live Tables (AUTO CDC)
-        ▼
-   gold/           Delta, SCD Type 2 dimensions + SCD Type 1 fact
-```
+![Architecture](docs/images/00-architecture.png)
+
+Data moves in one direction. Azure SQL lands in bronze only; silver derives from bronze via Auto
+Loader, and gold derives from silver via Delta Live Tables. Silver and gold are Unity Catalog
+tables under the `glc_project` catalog — the governance boundary drawn around them above.
 
 | Layer | Format | Contents |
 |---|---|---|
@@ -213,6 +203,30 @@ registered as an external location.
 
 ![External locations](docs/images/06-external-locations.png)
 ![Unity Catalog](docs/images/05-unity-catalog.png)
+
+---
+
+## Version control
+
+Both halves of the stack are Git-backed against this repository rather than living only inside the
+Azure portal.
+
+Azure Data Factory is connected with `main` as the collaboration branch and `adf_publish` as the
+publish branch, so every pipeline, dataset, and linked service definition is versioned here as
+JSON. Feature work happens on a branch and merges to `main`.
+
+The Databricks side uses a Git folder cloned from this repo. `silver_dimensions.ipynb`, the shared
+`utils/transformations.py`, and the DLT transformations all live under `databricks/`, with the
+Delta Live Tables pipeline's root folder and source code paths pointed into that folder — so the
+gold layer is versioned alongside the ADF definitions rather than drifting as untracked workspace
+files.
+
+Linking Databricks to GitHub required installing the Databricks GitHub App directly; OAuth account
+linking alone returned a push permission error.
+
+**What isn't here:** deployment is not automated. Promotion between environments would need
+Databricks Asset Bundles or an Azure DevOps release pipeline, which this build deliberately left
+out in favour of Git folders.
 
 ---
 
