@@ -22,16 +22,35 @@ Tables · Unity Catalog · PySpark · Delta Lake · Azure Logic Apps
 ## Repository layout
 
 ```
-pipeline/        ADF pipeline definitions (incremental_loop is the live one)
-dataset/         ADF datasets
-linkedService/   ADF linked services
-factory/         ADF factory config
-loop_input       the metadata array driving the ForEach
-databricks/
-  silver_dimensions.ipynb          Auto Loader bronze -> silver
-  utils/transformations.py         shared PySpark transformations
-  gold_pipeline/transformations/   DLT definitions, one per gold table
-docs/images/     evidence screenshots
+.
+├── pipeline/
+│   └── incremental_loop.json       metadata-driven ForEach, all five tables
+├── dataset/
+│   ├── azure_sql_dynamic.json      parameterised source
+│   ├── parquet_dynamic.json        parameterised bronze sink
+│   └── json_dynamic.json           watermark file read/write
+├── linkedService/
+│   ├── azure_sql.json
+│   └── datalake.json
+├── factory/                        ADF factory config
+├── loop_input                      the metadata array driving the ForEach
+│
+├── databricks/
+│   ├── silver_dimensions.ipynb     Auto Loader, bronze → silver
+│   ├── utils/
+│   │   └── transformations.py      shared PySpark transformations
+│   └── gold_pipeline/
+│       └── transformations/        DLT definitions, one per gold table
+│           ├── dim_user.py
+│           ├── dim_track.py
+│           ├── dim_date.py
+│           └── fact_stream.py
+│
+├── sql/
+│   └── schema.sql                  source DDL for Azure SQL
+├── scripts/
+│   └── generate_data.py            synthetic dataset generator
+└── docs/images/                    evidence screenshots
 ```
 
 ---
